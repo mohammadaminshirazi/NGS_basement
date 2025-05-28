@@ -1,0 +1,78 @@
+
+
+این script کاملی برای دانلود فایل‌های FASTQ از SRA هست. ویژگی‌های اصلی:
+
+## **ویژگی‌های کلیدی:**
+
+### **1. انعطاف‌پذیری ورودی:**
+- می‌تونه از فایل CSV یا فایل text (فقط SRR numbers) استفاده کنه
+- خودکار تشخیص می‌ده فایل چه نوعی هست
+
+### **2. بهینه‌سازی دانلود:**
+- استفاده از `prefetch` برای دانلود سریع‌تر
+- پشتیبانی از `parallel-fastq-dump` برای چندپردازه
+- فایل‌ها رو به صورت gzip ذخیره می‌کنه (فضای کمتر)
+
+### **3. سازماندهی فایل‌ها:**
+- هر SRR توی دایرکتوری جداگانه ذخیره می‌شه
+- نام‌گذاری منظم و قابل فهم
+
+### **4. مدیریت خطا:**
+- لاگ کامل از همه عملیات
+- ادامه دانلود حتی اگر یکی ناموفق باشه
+- ذخیره پیام‌های خطا برای debug
+
+## **استفاده:**
+
+### **حالت ساده:**
+```bash
+chmod +x sra_fastq_downloader.sh
+./sra_fastq_downloader.sh PRJNA390551_runinfo.csv
+```
+
+### **با مسیر مشخص:**
+```bash
+./sra_fastq_downloader.sh PRJNA390551_runinfo.csv ./my_data
+```
+
+### **با تعداد thread بیشتر:**
+```bash
+./sra_fastq_downloader.sh PRJNA390551_runinfo.csv ./my_data 8
+```
+
+### **با فایل text (فقط SRR numbers):**
+```bash
+./sra_fastq_downloader.sh PRJNA390551_accession_list.txt ./my_data
+```
+
+## **ساختار خروجی:**
+```
+fastq_downloads/
+├── SRR5738067/
+│   ├── SRR5738067_1.fastq.gz
+│   └── SRR5738067_2.fastq.gz
+├── SRR5738068/
+│   ├── SRR5738068_1.fastq.gz
+│   └── SRR5738068_2.fastq.gz
+├── ...
+├── download_log.txt
+├── download_stats.txt
+└── sra_cache/
+```
+
+## **پیش‌نیازها:**
+```bash
+# نصب sra-toolkit
+sudo apt-get install sra-toolkit  # Ubuntu/Debian
+# یا
+conda install -c bioconda sra-tools  # Conda
+```
+
+Script خودش چک می‌کنه که sra-toolkit نصب باشه و راهنمایی نصب می‌ده اگر نباشه.
+
+## **نکات مهم:**
+- **فضای دیسک**: هر SRR معمولاً 200MB تا 2GB هست
+- **زمان**: بسته به سرعت اینترنت، هر SRR 5-30 دقیقه طول می‌کشه
+- **Resume**: اگر قطع شه، فایل‌های دانلود شده رو دوباره دانلود نمی‌کنه
+
+
